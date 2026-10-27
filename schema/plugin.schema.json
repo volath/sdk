@@ -41,6 +41,11 @@
       "type": "string",
       "maxLength": 500
     },
+    "logo": {
+      "type": "string",
+      "pattern": ".(png|jpe?g|webp|svg)$",
+      "description": "The plugin logo: a relative path to a .png, .jpg, .webp or .svg inside the zip (up to 512 KB, square works best, e.g. 256x256). Shown in Settings > Plugins and in the marketplace"
+    },
     "volath": {
       "type": "string",
       "maxLength": 500,

@@ -689,6 +689,8 @@ export interface PluginManifest {
   description?: string;
   author?: string;
   homepage?: string;
+  /** The plugin logo: a relative path to a .png, .jpg, .webp or .svg inside the zip (up to 512 KB, square works best, e.g. 256x256). Shown in Settings > Plugins and in the marketplace */
+  logo?: string;
   /** Semver range of compatible Volath versions */
   volath?: string;
   /** The code (CommonJS): a relative .js path inside the zip. Needed for schedule, webhooks, onEvent, onPrompt, onRequest */

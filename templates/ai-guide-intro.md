@@ -49,6 +49,10 @@ Values are checked when the administrator saves; every problem is shown next to 
 
 Pages and slot widgets run in a sandboxed frame. Volath injects the app's current dark or light colours and forces the page background and text colour, so a widget is never a white block in a dark app. Style with the variables `--volath-background`, `--volath-foreground`, `--volath-card`, `--volath-border`, `--volath-muted`, `--volath-muted-foreground`, `--volath-primary`, `--volath-destructive`, `--volath-radius` and `--volath-font`. `volath.theme` is `"dark"` or `"light"`, and a `volath-theme` event fires on `window` when the person switches. Never hard-code white or black.
 
+## Logo
+
+Give the plugin a logo: `"logo": "logo.svg"` in `plugin.json`, a file inside the zip (`.png`, `.jpg`, `.webp` or `.svg`, up to 512 KB, square, e.g. 256x256). It is shown on the plugin's card in Settings > Plugins and in the marketplace. An SVG is shown only as an image, so scripts in it never run. Pick colours that read on a light and a dark background. For the marketplace, the build copies it next to `index.json`.
+
 ## Distribution: zip or marketplace
 
 A plugin reaches an installation in one of two ways, and Volath shows which one next to the plugin in Settings > Plugins:

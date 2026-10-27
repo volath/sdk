@@ -59,6 +59,7 @@ The JSON Schema is in `schema/plugin.schema.json`. Fields:
 - `description`: 
 - `author`: 
 - `homepage`: 
+- `logo`: The plugin logo: a relative path to a .png, .jpg, .webp or .svg inside the zip (up to 512 KB, square works best, e.g. 256x256). Shown in Settings > Plugins and in the marketplace
 - `volath`: Semver range of compatible Volath versions
 - `main`: The code (CommonJS): a relative .js path inside the zip. Needed for schedule, webhooks, onEvent, onPrompt, onRequest
 - `permissions`: Everything the plugin may do; the administrator approves it, and approves again when it changes
