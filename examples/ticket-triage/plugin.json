@@ -1,0 +1,19 @@
+{
+  "id": "ticket-triage",
+  "name": "Ticket triage",
+  "version": "1.0.0",
+  "apiVersion": 1,
+  "description": "Reacts to new tickets in code: fills a custom field, leaves a comment and tells the team. Shows ctx.tickets, ctx.developers and ctx.notifications.",
+  "author": "Volath",
+  "main": "index.js",
+  "permissions": {
+    "tickets": "write",
+    "developers": "read",
+    "notifications": true,
+    "storage": true,
+    "events": ["ticket.created"]
+  },
+  "settings": [
+    { "key": "keyword", "label": "Mark tickets that mention", "type": "text", "fallback": "urgent" }
+  ]
+}

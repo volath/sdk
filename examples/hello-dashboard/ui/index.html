@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <style>
+    body { font: 14px system-ui, sans-serif; margin: 16px; background: transparent; }
+    li { margin: 4px 0; }
+    .muted { opacity: 0.6; }
+  </style>
+</head>
+<body>
+  <h2>Merged tickets</h2>
+  <ul id="list"><li class="muted">Loading…</li></ul>
+  <script>
+    // volath.api(path, { method, body }) reaches onRequest of the plugin; it is the only way out of this page
+    volath.api('/merged').then(function (res) {
+      var list = document.getElementById('list');
+      list.innerHTML = '';
+      if (!res.json.length) list.innerHTML = '<li class="muted">Nothing merged yet.</li>';
+      res.json.forEach(function (t) {
+        var li = document.createElement('li');
+        li.textContent = '#' + t.number + ' ' + t.title;
+        list.appendChild(li);
+      });
+    });
+  </script>
+</body>
+</html>

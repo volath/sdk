@@ -1,0 +1,29 @@
+{
+  "id": "project-bootstrap",
+  "name": "Project bootstrap",
+  "version": "1.0.0",
+  "apiVersion": 1,
+  "description": "When a project is created, adds a default developer to it and makes sure the ticket custom field \"cost_center\" exists. No code: actions that ask Volath to do things.",
+  "author": "Volath",
+  "permissions": {
+    "developers": "write",
+    "customFields": "write",
+    "events": ["project.created"]
+  },
+  "settings": [
+    { "key": "developerName", "label": "Default developer", "type": "text", "required": true, "help": "Added to every new project." },
+    { "key": "developerEmail", "label": "Developer email", "type": "text" }
+  ],
+  "actions": [
+    {
+      "on": "project.created",
+      "call": "developers.add",
+      "args": { "projectId": "{{event.project.id}}", "name": "{{settings.developerName}}", "email": "{{settings.developerEmail}}", "role": "Developer" }
+    },
+    {
+      "on": "project.created",
+      "call": "customFields.create",
+      "args": { "code": "cost_center", "name": "Cost center", "entityType": "ticket", "fieldType": "text" }
+    }
+  ]
+}

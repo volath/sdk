@@ -1,0 +1,20 @@
+name: Check
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # The generated files must match what the generator writes from lib/api-docs.js
+      - run: npm run check
+      # Every example must pass the checker that Volath runs
+      - run: |
+          for d in examples/*/; do node bin/volath-plugin.js validate "$d"; done

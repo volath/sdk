@@ -1,0 +1,20 @@
+{
+  "id": "ui-slots",
+  "name": "UI slots demo",
+  "version": "1.0.0",
+  "apiVersion": 1,
+  "description": "Puts a widget on the board, a button in the top bar, a menu item, a ticket tab and a project tab. Shows ui.slots.",
+  "author": "Volath",
+  "main": "index.js",
+  "permissions": { "tickets": "read" },
+  "ui": {
+    "slots": [
+      { "slot": "board", "title": "Today", "entry": "ui/board.html", "height": 90 },
+      { "slot": "topbar", "title": "Quick links", "icon": "Bell", "links": [{ "label": "Volath help", "url": "https://github.com/volath" }] },
+      { "slot": "menu", "title": "Ticket counts", "entry": "ui/counts.html" },
+      { "slot": "ticket.tab", "title": "Ticket facts", "entry": "ui/ticket.html", "height": 120 },
+      { "slot": "ticket.panel", "title": "Note", "text": "This panel comes from a plugin." },
+      { "slot": "project.tab", "title": "Project facts", "entry": "ui/ticket.html", "height": 120 }
+    ]
+  }
+}

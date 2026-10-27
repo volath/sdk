@@ -1,0 +1,8 @@
+<body style="font:13px system-ui;margin:8px"><div id="out">Loading…</div>
+<script>
+var c = volath.context;   // { slot, projectId, ticketId }
+if (!c.ticketId) document.getElementById('out').textContent = 'Project ' + c.projectId;
+else volath.api('/ticket?ticketId=' + c.ticketId).then(function (r) {
+  document.getElementById('out').textContent = r.ok ? '#' + r.json.number + ' ' + r.json.title + ' (' + r.json.status + ')' : 'Could not load';
+});
+</script></body>

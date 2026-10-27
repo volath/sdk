@@ -1,0 +1,35 @@
+{
+  "name": "@volath/sdk",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "Build, test and package plugins for Volath: types, schema, an AI-ready reference and the same checker Volath runs",
+  "bin": {
+    "volath-plugin": "bin/volath-plugin.js"
+  },
+  "main": "lib/manifest.js",
+  "types": "types/index.d.ts",
+  "files": [
+    "bin",
+    "lib",
+    "types",
+    "schema",
+    "docs",
+    "templates",
+    "examples",
+    "llms.txt"
+  ],
+  "scripts": {
+    "sync": "node scripts/sync.js",
+    "generate": "node scripts/generate.js",
+    "build": "node scripts/sync.js && node scripts/generate.js",
+    "check": "node scripts/generate.js --check"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "volath",
+    "plugin",
+    "sdk"
+  ]
+}

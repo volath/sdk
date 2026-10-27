@@ -1,0 +1,686 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Volath plugin manifest (plugin.json)",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "version",
+    "apiVersion"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{1,39}$",
+      "description": "2-40 characters: lowercase letters, digits, dashes. Never change it: it identifies the plugin and its stored data"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$",
+      "description": "Semantic version; installing the same id updates the plugin and keeps its settings"
+    },
+    "apiVersion": {
+      "const": 1,
+      "description": "Always 1"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "author": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "homepage": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "volath": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "Semver range of compatible Volath versions"
+    },
+    "main": {
+      "type": "string",
+      "pattern": "\\.c?js$",
+      "description": "The code (CommonJS): a relative .js path inside the zip. Needed for schedule, webhooks, onEvent, onPrompt, onRequest"
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "network": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(\\*\\.)?[a-z0-9]([a-z0-9-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*(:\\d{1,5})?$"
+          },
+          "description": "Hosts ctx.http.fetch and http actions may call (\"api.acme.com\", \"*.acme.com\", \"localhost:3000\"). No scheme, no path; redirects are not followed"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "enum": [
+                  "ticket.status_changed",
+                  "pr.opened",
+                  "test.finished",
+                  "ci.failed",
+                  "deploy.finished",
+                  "budget.exceeded",
+                  "approval.requested",
+                  "digest",
+                  "ticket.updated",
+                  "ticket.deleted",
+                  "ticket.timeline",
+                  "ticket.activity",
+                  "ai.job",
+                  "notification",
+                  "ticket.reverted",
+                  "release.published",
+                  "workflow.notify",
+                  "ticket.created",
+                  "ticket.comment_added",
+                  "project.created",
+                  "project.updated",
+                  "project.deleted",
+                  "developer.created",
+                  "developer.updated",
+                  "customfield.created",
+                  "customfield.updated",
+                  "customfield.deleted",
+                  "workflow.updated",
+                  "*"
+                ]
+              },
+              {
+                "type": "string",
+                "pattern": "^entity\\.[a-z_]+\\.(created|updated|deleted)$"
+              }
+            ]
+          },
+          "description": "Events the plugin receives (\"*\" = all)"
+        },
+        "storage": {
+          "type": "boolean",
+          "description": "ctx.storage (JSON values, no size limit)"
+        },
+        "notifications": {
+          "type": "boolean",
+          "description": "ctx.notifications.create"
+        },
+        "tickets": {
+          "enum": [
+            "read",
+            "write"
+          ],
+          "description": "Read tickets (read) or also create, change, move and comment (write)"
+        },
+        "projects": {
+          "enum": [
+            "read",
+            "write",
+            "admin"
+          ],
+          "description": "read; write creates/edits projects; admin also sets the folder (where Volath runs git and the AI) and the settings of a project"
+        },
+        "developers": {
+          "enum": [
+            "read",
+            "write"
+          ],
+          "description": "Read project members, or also add, change and remove them"
+        },
+        "users": {
+          "enum": [
+            "read",
+            "write",
+            "admin"
+          ],
+          "description": "read the people; write edits profiles (never email or password); admin also changes roles and project access"
+        },
+        "agents": {
+          "enum": [
+            "read",
+            "write"
+          ],
+          "description": "Read or create/edit AI agents (never deleted)"
+        },
+        "skills": {
+          "enum": [
+            "read",
+            "write"
+          ],
+          "description": "Read or create/edit skills"
+        },
+        "squads": {
+          "enum": [
+            "read",
+            "write"
+          ],
+          "description": "Read or create/edit squads"
+        },
+        "documents": {
+          "enum": [
+            "read",
+            "write"
+          ],
+          "description": "Read documents, or add notes/links, edit and attach them"
+        },
+        "ticketTemplates": {
+          "enum": [
+            "read",
+            "write"
+          ],
+          "description": "Read or create/edit ticket templates"
+        },
+        "boardViews": {
+          "enum": [
+            "read",
+            "write"
+          ],
+          "description": "Read or create/edit shared board views"
+        },
+        "customFields": {
+          "enum": [
+            "read",
+            "write"
+          ],
+          "description": "Read or create/rename custom field definitions"
+        },
+        "workflows": {
+          "enum": [
+            "read",
+            "write"
+          ],
+          "description": "Read workflows and the catalog, or replace the workflow of any project and publish to the catalog"
+        },
+        "webhooks": {
+          "enum": [
+            "read",
+            "write"
+          ],
+          "description": "Read the webhooks of a project, or create and manage webhooks this plugin made"
+        },
+        "actions": {
+          "oneOf": [
+            {
+              "const": true
+            },
+            {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "analyze",
+                  "develop",
+                  "stop",
+                  "pullRequest",
+                  "tests",
+                  "merge",
+                  "approve",
+                  "jobs"
+                ]
+              },
+              "uniqueItems": true
+            }
+          ],
+          "description": "true (all) or the actions ctx.actions may start"
+        },
+        "prompts": {
+          "oneOf": [
+            {
+              "const": true
+            },
+            {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "analysis",
+                  "development",
+                  "review",
+                  "pr_description",
+                  "merge_conflict",
+                  "live_test",
+                  "release_notes"
+                ]
+              },
+              "uniqueItems": true
+            }
+          ],
+          "description": "true (all) or the AI runs the plugin may append text to"
+        }
+      },
+      "description": "Everything the plugin may do; the administrator approves it, and approves again when it changes"
+    },
+    "settings": {
+      "type": "array",
+      "description": "Fields the administrator fills in (general, and per project: a project without a value uses the general one). Read as ctx.settings.<key> or {{settings.<key>}}",
+      "items": {
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "type"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,39}$"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "text",
+              "password",
+              "number",
+              "toggle",
+              "select"
+            ],
+            "description": "password values are encrypted and never shown again"
+          },
+          "help": {
+            "type": "string"
+          },
+          "placeholder": {
+            "type": "string"
+          },
+          "fallback": {
+            "type": [
+              "string",
+              "number",
+              "boolean"
+            ],
+            "description": "Default"
+          },
+          "required": {
+            "type": "boolean",
+            "description": "Blocks enabling the plugin until filled, and cannot be emptied while the plugin is on (unless it has a fallback). Secrets: when saving, an empty text or the mask keeps the stored secret and null removes it"
+          },
+          "pattern": {
+            "type": "string",
+            "maxLength": 300,
+            "description": "text and password: a regular expression the value must match (checked when the administrator saves, with a message naming the field)"
+          },
+          "minLength": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2000,
+            "description": "text and password"
+          },
+          "maxLength": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2000,
+            "description": "text and password"
+          },
+          "min": {
+            "type": "number",
+            "description": "number only"
+          },
+          "max": {
+            "type": "number",
+            "description": "number only"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "value",
+                "label"
+              ],
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "select only"
+          }
+        }
+      }
+    },
+    "ui": {
+      "type": "object",
+      "description": "A page of the plugin and/or items in Volath's screens. entry and title are required unless slots are given",
+      "properties": {
+        "entry": {
+          "type": "string",
+          "pattern": "\\.html?$",
+          "description": "ONE self-contained html file; talks to onRequest through volath.api()"
+        },
+        "title": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string",
+          "description": "Name of a Lucide icon"
+        },
+        "slots": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "type": "object",
+            "required": [
+              "slot",
+              "title"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "slot": {
+                "enum": [
+                  "topbar",
+                  "menu",
+                  "board",
+                  "ticket.tab",
+                  "ticket.panel",
+                  "project.tab"
+                ],
+                "description": "topbar: button opening a panel; menu: Plugins menu item opening a page (needs entry); board: widget row above the board; ticket.tab: collapsible section in the ticket; ticket.panel: block in the ticket side column; project.tab: block in the project settings"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              },
+              "icon": {
+                "type": "string",
+                "description": "Name of a Lucide icon"
+              },
+              "height": {
+                "type": "integer",
+                "minimum": 40,
+                "maximum": 1200,
+                "description": "Pixels"
+              },
+              "entry": {
+                "type": "string",
+                "pattern": "\\.html?$",
+                "description": "An html page inside the zip, in a sandboxed frame (volath.api only, no network)"
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 1000,
+                "description": "Plain text shown in the slot"
+              },
+              "links": {
+                "type": "array",
+                "maxItems": 8,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "label",
+                    "url"
+                  ],
+                  "properties": {
+                    "label": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string",
+                      "pattern": "^https?://"
+                    }
+                  }
+                },
+                "description": "Up to 8 links"
+              }
+            },
+            "description": "Exactly one of entry, text or links"
+          }
+        }
+      }
+    },
+    "actions": {
+      "type": "array",
+      "description": "Declarative reactions (no code): when an event happens, call an API (http) or ask Volath to do something (call). {{event.*}}, {{settings.*}}, {{plugin.id}} work in the values",
+      "items": {
+        "type": "object",
+        "required": [
+          "on"
+        ],
+        "properties": {
+          "on": {
+            "anyOf": [
+              {
+                "enum": [
+                  "ticket.status_changed",
+                  "pr.opened",
+                  "test.finished",
+                  "ci.failed",
+                  "deploy.finished",
+                  "budget.exceeded",
+                  "approval.requested",
+                  "digest",
+                  "ticket.updated",
+                  "ticket.deleted",
+                  "ticket.timeline",
+                  "ticket.activity",
+                  "ai.job",
+                  "notification",
+                  "ticket.reverted",
+                  "release.published",
+                  "workflow.notify",
+                  "ticket.created",
+                  "ticket.comment_added",
+                  "project.created",
+                  "project.updated",
+                  "project.deleted",
+                  "developer.created",
+                  "developer.updated",
+                  "customfield.created",
+                  "customfield.updated",
+                  "customfield.deleted",
+                  "workflow.updated"
+                ]
+              },
+              {
+                "type": "string",
+                "pattern": "^entity\\.[a-z_]+\\.(created|updated|deleted)$"
+              }
+            ],
+            "description": "The event; it must also be in permissions.events"
+          },
+          "when": {
+            "type": "object",
+            "description": "path -> value (text, number, boolean) that must all match; paths are relative to the event (data.to, ticket.number)"
+          },
+          "http": {
+            "type": "object",
+            "required": [
+              "method",
+              "url"
+            ],
+            "properties": {
+              "method": {
+                "enum": [
+                  "GET",
+                  "POST",
+                  "PUT",
+                  "PATCH",
+                  "DELETE"
+                ]
+              },
+              "url": {
+                "type": "string",
+                "description": "https://... or starting with {{settings.x}}; its host must be in permissions.network"
+              },
+              "headers": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "body": {
+                "description": "Sent as JSON when an object"
+              }
+            }
+          },
+          "call": {
+            "enum": [
+              "tickets.list",
+              "tickets.get",
+              "tickets.comments",
+              "tickets.create",
+              "tickets.update",
+              "tickets.setStatus",
+              "tickets.comment",
+              "projects.list",
+              "projects.get",
+              "projects.create",
+              "projects.update",
+              "workflows.get",
+              "workflows.effective",
+              "workflows.defaults",
+              "workflows.save",
+              "workflows.reset",
+              "workflows.catalogList",
+              "workflows.catalogPublish",
+              "workflows.catalogRemove",
+              "workflows.catalogApply",
+              "developers.list",
+              "developers.add",
+              "developers.update",
+              "developers.remove",
+              "webhooks.list",
+              "webhooks.create",
+              "webhooks.update",
+              "webhooks.remove",
+              "users.list",
+              "users.get",
+              "users.update",
+              "tickets.git",
+              "tickets.timeline",
+              "tickets.attachments",
+              "agents.list",
+              "agents.get",
+              "agents.create",
+              "agents.update",
+              "skills.list",
+              "skills.get",
+              "skills.create",
+              "skills.update",
+              "squads.list",
+              "squads.get",
+              "squads.create",
+              "squads.update",
+              "documents.list",
+              "documents.get",
+              "documents.create",
+              "documents.update",
+              "documents.attach",
+              "documents.detach",
+              "ticketTemplates.list",
+              "ticketTemplates.get",
+              "ticketTemplates.create",
+              "ticketTemplates.update",
+              "boardViews.list",
+              "boardViews.create",
+              "boardViews.update",
+              "customFields.list",
+              "customFields.create",
+              "customFields.update",
+              "notifications.create",
+              "actions.analyze",
+              "actions.develop",
+              "actions.stop",
+              "actions.pullRequest",
+              "actions.runTests",
+              "actions.merge",
+              "actions.approve",
+              "actions.reject",
+              "actions.resumeJob",
+              "actions.cancelJob"
+            ],
+            "description": "Instead of http: one of the ctx functions (e.g. \"developers.add\"), allowed by permissions"
+          },
+          "args": {
+            "description": "An object or a list of arguments for call; placeholders work in the values"
+          }
+        },
+        "description": "Give either http or call"
+      }
+    },
+    "schedule": {
+      "type": "array",
+      "description": "Runs module.exports.tasks[task]; needs main",
+      "items": {
+        "type": "object",
+        "required": [
+          "every",
+          "task"
+        ],
+        "properties": {
+          "every": {
+            "type": "string",
+            "pattern": "^\\d{1,4}(m|h|d)$",
+            "description": "Minutes, hours or days; at least 1m"
+          },
+          "task": {
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,39}$"
+          }
+        }
+      }
+    },
+    "webhooks": {
+      "type": "array",
+      "description": "Addresses outside systems may call (needs main): POST <volath>/api/plugin-hooks/<id>/<name>?token=<secret> (or header X-Volath-Token). Volath makes the secret; the administrator copies it in Settings › Plugins",
+      "items": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,39}$"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 300
+          }
+        }
+      }
+    },
+    "promptAppend": {
+      "type": "array",
+      "description": "Text added at the END of the AI prompt at a stage, never replacing it, inside a \"--- Added by plugin <name> ---\" block. The stage must be in permissions.prompts",
+      "items": {
+        "type": "object",
+        "required": [
+          "on",
+          "text"
+        ],
+        "properties": {
+          "on": {
+            "enum": [
+              "analysis",
+              "development",
+              "review",
+              "pr_description",
+              "merge_conflict",
+              "live_test",
+              "release_notes"
+            ]
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

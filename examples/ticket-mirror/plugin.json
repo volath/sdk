@@ -1,0 +1,34 @@
+{
+  "id": "ticket-mirror",
+  "name": "Ticket mirror",
+  "version": "1.0.0",
+  "apiVersion": 1,
+  "description": "Creates the same ticket in another system through its API whenever a ticket is created here. No code: one declarative action.",
+  "author": "Volath",
+  "permissions": {
+    "network": ["api.example.com"],
+    "events": ["ticket.created"]
+  },
+  "settings": [
+    { "key": "baseUrl", "label": "API URL", "type": "text", "fallback": "https://api.example.com", "help": "Where the other system listens." },
+    { "key": "token", "label": "API token", "type": "password", "required": true }
+  ],
+  "actions": [
+    {
+      "on": "ticket.created",
+      "http": {
+        "method": "POST",
+        "url": "{{settings.baseUrl}}/issues",
+        "headers": { "Authorization": "Bearer {{settings.token}}" },
+        "body": {
+          "externalId": "{{event.ticket.id}}",
+          "number": "{{event.ticket.number}}",
+          "title": "{{event.ticket.title}}",
+          "description": "{{event.data.description}}",
+          "type": "{{event.data.type}}",
+          "project": "{{event.project.name}}"
+        }
+      }
+    }
+  ]
+}

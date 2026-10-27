@@ -1,0 +1,6 @@
+<body style="font:13px system-ui;margin:8px"><div id="out">Loading…</div>
+<script>
+volath.api('/counts?projectId=' + volath.context.projectId).then(function (r) {
+  document.getElementById('out').textContent = r.ok ? Object.keys(r.json).map(function (k) { return k + ': ' + r.json[k]; }).join('   ') || 'No tickets' : 'Could not load';
+});
+</script></body>

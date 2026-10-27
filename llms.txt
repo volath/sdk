@@ -1,0 +1,9 @@
+# Volath plugin SDK
+
+> Build plugins for Volath (project and ticket management with AI development). A plugin is a zip with a plugin.json and optionally a Node file; it asks for permissions and reacts to events or acts on Volath through ctx.
+
+- [AI guide](docs/AI_GUIDE.md): everything needed to write a plugin: rules, the full reference and working examples. Read this first
+- [Reference](docs/REFERENCE.md): every call, event, permission, manifest field and limit
+- [TypeScript types](types/index.d.ts)
+- [plugin.json schema](schema/plugin.schema.json)
+- [Examples](examples)
